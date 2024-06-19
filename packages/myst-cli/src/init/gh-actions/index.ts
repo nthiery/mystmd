@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import type { ISession } from 'myst-cli-utils';
 import { makeExecutable, writeFileToFolder } from 'myst-cli-utils';
-import { getGithubUrl } from '../utils/github.js';
+import { getGithubUrl } from '../../utils/github.js';
 
 function createGithubPagesAction({
   defaultBranch = 'main',
