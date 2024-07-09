@@ -162,7 +162,18 @@ export async function transformMdast(
   const references: References = {
     cite: { order: [], data: {} },
   };
-  const state = new ReferenceState(file, { numbering: frontmatter.numbering, identifiers, vfile });
+  const state = new ReferenceState(file, {
+    frontmatter,
+    identifiers,
+    vfile,
+  });
+  if (!frontmatter.enumerator) {
+    frontmatter.enumerator = state.enumerator;
+  }
+  if (frontmatter.enumerator) {
+    // It would be better to handle enumerator at the theme / template level rather than baking into title
+    frontmatter.title = `${frontmatter.enumerator}${frontmatter.title ? ` ${frontmatter.title}` : ''}`;
+  }
   cache.$internalReferences[file] = state;
   // Import additional content from mdast or other files
   frontmatterPartsTransform(session, file, mdast, frontmatter);
