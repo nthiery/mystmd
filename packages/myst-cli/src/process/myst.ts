@@ -9,6 +9,8 @@ import { VFile } from 'vfile';
 import type { ISession } from '../session/types.js';
 import { logMessagesFromVFile } from '../utils/logging.js';
 import type { GenericParent } from 'myst-common';
+import{ automoduleDirective } from 'myst-ext-autodoc';
+
 
 /**
  * Boiled-down options for parseMyst
@@ -38,6 +40,7 @@ export function parseMyst(
   const parsed = mystParse(content, {
     markdownit: { linkify: true },
     directives: [
+      automoduleDirective,
       cardDirective,
       ...gridDirectives,
       reactiveDirective,
