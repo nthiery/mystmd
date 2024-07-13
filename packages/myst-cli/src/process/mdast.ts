@@ -78,6 +78,7 @@ import { parseMyst } from './myst.js';
 import { kernelExecutionTransform, LocalDiskCache } from 'myst-execute';
 import type { IOutput } from '@jupyterlab/nbformat';
 import { rawDirectiveTransform } from '../transforms/raw.js';
+import { autodocTransform } from 'myst-ext-autodoc';
 
 const LINKS_SELECTOR = 'link,card,linkBlock';
 
@@ -172,6 +173,7 @@ export async function transformMdast(
   // This needs to come before basic transformations since it may add labels to blocks
   liftCodeMetadataToBlock(session, vfile, mdast);
 
+  autodocTransform(mdast);
   const pipe = unified()
     .use(reconstructHtmlPlugin) // We need to group and link the HTML first
     .use(htmlPlugin, { htmlHandlers }) // Some of the HTML plugins need to operate on the transformed html, e.g. figure caption transforms

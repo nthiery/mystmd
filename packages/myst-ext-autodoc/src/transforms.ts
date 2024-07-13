@@ -90,8 +90,12 @@ function processModule(node: AutoModule, descNodes: GenericNode[]) {
  * Prepare Sphinx and run a build
  * @param opts transform options
  */
-export function autodocTransform() {
-  return async (mdast: GenericParent	) => {
+export function autodocPlugin() {
+  return (mdast: GenericParent) => autodocTransform(mdast);
+}
+
+
+export async function autodocTransform(mdast: GenericParent) {
     // TODO handle options
     const automoduleNodes = selectAll('sphinx-automodule', mdast) as AutoModule[];
     const generatedDirectives = automoduleNodes.map(buildAutoModuleRST);
@@ -146,4 +150,3 @@ export function autodocTransform() {
       processModule(node, moduleDescNodes);
     });
   };
-}
