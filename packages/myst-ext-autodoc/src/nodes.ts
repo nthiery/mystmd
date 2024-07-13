@@ -76,6 +76,7 @@ export function docutilsToMDAST(node: GenericNode): GenericNode {
         kind: node.name,
         children: node.children,
         data: node.attributes,
+        class: node.attributes.classes,
       });
       return CONTINUE;
     }
