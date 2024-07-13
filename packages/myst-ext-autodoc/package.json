@@ -1,0 +1,43 @@
+{
+  "name": "myst-ext-autodoc",
+  "version": "0.0.0",
+  "sideEffects": false,
+  "license": "MIT",
+  "description": "Process Sphinx autodoc directives in MyST",
+  "author": "Angus Hollands <goosey15@gmail.com>",
+  "homepage": "https://github.com/executablebooks/mystmd/tree/main/packages/myst-ext-autodoc",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/executablebooks/mystmd.git"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "lint": "eslint \"src/**/!(*.spec).ts\" -c ./.eslintrc.cjs",
+    "lint:format": "npx prettier --check \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "build:esm": "tsc",
+    "build": "npm-run-all -l clean -p build:esm"
+  },
+  "bugs": {
+    "url": "https://github.com/executablebooks/mystmd/issues"
+  },
+  "dependencies": {
+    "myst-common": "^1.3.0",
+    "unist-util-select": "^4.0.3",
+    "xast-util-from-xml": "^4.0.0",
+    "vfile": "^5.3.7",
+    "which": "^4.0.0"
+  },
+  "devDependencies": {
+  }
+}
