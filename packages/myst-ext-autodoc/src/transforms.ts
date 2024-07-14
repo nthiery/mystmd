@@ -5,6 +5,7 @@ import { selectAll, select } from 'unist-util-select';
 import type { AutoModule } from './types.js';
 import { join } from 'node:path';
 import type { GenericParent } from 'myst-common';
+import { normalizeLabel } from 'myst-common';
 import { docutilsToMDAST } from './nodes.js';
 import type { ISession } from 'myst-cli';
 import { createTempFolder } from 'myst-cli';
@@ -97,6 +98,9 @@ export async function autodocTransform(session: ISession, mdast: GenericParent) 
   automoduleNodes.forEach((node) => {
     const moduleDescNodes = moduleToDesc.get(node.module);
     if (moduleDescNodes) {
+      const { label, identifier } = normalizeLabel(`module-${node.module}`) ?? {};
+      node.label = label;
+      node.identifier = identifier;
       node.children = moduleDescNodes;
     } else {
       console.debug('No autodoc descriptions found. Did you document the correct module?');
