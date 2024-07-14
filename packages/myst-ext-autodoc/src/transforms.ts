@@ -1,12 +1,13 @@
 import { spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import { fromXml } from 'xast-util-from-xml';
-import { selectAll } from 'unist-util-select';
+import { selectAll, select } from 'unist-util-select';
 import type { AutoModule } from './types.js';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { GenericParent } from 'myst-common';
 import { docutilsToMDAST } from './nodes.js';
+import type { ISession } from 'myst-cli';
+import { createTempFolder } from 'myst-cli';
 
 const SPHINX_CONF_PY = `
 import sys, os
@@ -33,11 +34,11 @@ ${body}
  * Prepare Sphinx and run a build
  * @param opts transform options
  */
-export function autodocPlugin() {
-  return (mdast: GenericParent) => autodocTransform(mdast);
+export function autodocPlugin(session: ISession) {
+  return (mdast: GenericParent) => autodocTransform(session, mdast);
 }
 
-export async function autodocTransform(mdast: GenericParent) {
+export async function autodocTransform(session: ISession, mdast: GenericParent) {
   // TODO handle options
   const automoduleNodes = selectAll('sphinx-automodule', mdast) as AutoModule[];
   const generatedDirectives = automoduleNodes.map(buildAutoModuleRST);
@@ -46,7 +47,7 @@ export async function autodocTransform(mdast: GenericParent) {
   }
 
   // Copy to temp
-  const dst = await fs.mkdtemp(join(tmpdir(), 'autodoc-'));
+  const dst = createTempFolder(session);
   // Write config
   await fs.writeFile(join(dst, 'conf.py'), SPHINX_CONF_PY, {
     encoding: 'utf-8',
@@ -72,13 +73,17 @@ export async function autodocTransform(mdast: GenericParent) {
   // The actual data follows the target. We want something like target + text + desc as a selector, but I don't know how robust that is.
   const descNodes = selectAll('desc', tree);
 
-  console.log(JSON.stringify(descNodes, null, 2));
   // Group `desc` nodes by module
   const moduleToDesc = new Map();
   descNodes.forEach((node) => {
-    // Parse `module-XXX` ID as `XXX`
-    const refID = (node as any).data?.ids ?? ''; // TODO: is this plural, i.e separated somehow? Assume not.
-    const [_, module] = refID.match(/module-(.*)/);
+    const signature = select('desc_signature', node);
+    if (signature === null) {
+      throw new Error('Found desc node without expected desc_signature child');
+    }
+    const module = signature.data?.module as string | undefined;
+    if (module === undefined) {
+      throw new Error('Found desc_signature node without expected `module` attribute');
+    }
 
     // Append desc node to those grouped by module
     if (moduleToDesc.has(module)) {

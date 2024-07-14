@@ -173,7 +173,7 @@ export async function transformMdast(
   // This needs to come before basic transformations since it may add labels to blocks
   liftCodeMetadataToBlock(session, vfile, mdast);
 
-  await autodocTransform(mdast);
+  await autodocTransform(session, mdast);
 
   const pipe = unified()
     .use(reconstructHtmlPlugin) // We need to group and link the HTML first
