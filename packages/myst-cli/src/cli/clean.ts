@@ -17,6 +17,7 @@ import {
   makeTempOption,
   makeExportsOption,
   makeTemplatesOption,
+  makeCffOption,
 } from './options.js';
 
 export function makeCleanCommand() {
@@ -30,6 +31,7 @@ export function makeCleanCommand() {
     .addOption(makeMdOption('Clean MD output'))
     .addOption(makeJatsOption('Clean JATS xml output'))
     .addOption(makeMecaOptions('Clean MECA zip output'))
+    .addOption(makeCffOption('Clean CFF output'))
     .addOption(makeSiteOption('Clean MyST site content'))
     .addOption(makeHtmlOption('Clean static HTML site content'))
     .addOption(makeExecuteOption('Clean execute cache'))
