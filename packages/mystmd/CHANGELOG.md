@@ -1,5 +1,11 @@
 # mystmd
 
+## 1.3.5
+
+### Patch Changes
+
+- 0625105e: Citation improvements for latex (citealp)
+
 ## 1.3.4
 
 ## 1.3.3

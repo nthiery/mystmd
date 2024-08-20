@@ -1,5 +1,11 @@
 # myst-frontmatter
 
+## 1.5.4
+
+### Patch Changes
+
+- e2b74f4: Update licenses
+
 ## 1.5.3
 
 ### Patch Changes
